@@ -73,7 +73,7 @@ BLITZ3D(BBStr) IniGetString(BBStr path, BBStr section, BBStr key, BBStr defaultV
 			if ((section1 == section) && (key == key1)) {
 				std::string value = line.substr(line.find('=') + 1);
 				if (value[0] == ' ') value = value.substr(1);
-				return BlitzToolbox::getCharPtr(value);
+				return BlitzToolbox::blitz3d_string(value);
 			}
 		}
 	}

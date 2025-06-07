@@ -480,7 +480,7 @@ BLITZ3D(BBStr) JsonGetFormattedWriterString(JsonVariable* object) {
         StringBuffer buffer;
         PrettyWriter<StringBuffer> writer(buffer);
         document.Accept(writer);
-        return BlitzToolbox::getCharPtr(buffer.GetString());
+        return buffer.GetString();
     }
     else {
         __rapidbson_runtime_exception("JsonGetFormattedJsonFromWriter", "Invalid argument!");
