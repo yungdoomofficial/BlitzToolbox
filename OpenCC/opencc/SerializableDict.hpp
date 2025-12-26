@@ -20,6 +20,7 @@
 
 #include "Dict.hpp"
 
+
 namespace opencc {
 /**
  * Serializable dictionary interface

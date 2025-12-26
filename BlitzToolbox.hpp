@@ -7,27 +7,33 @@
 #include <vector>
 #include <filesystem>
 #include <Windows.h>
+#include <cctype>
 
-#define BLITZ3D(x) extern "C" __declspec(dllexport) x _stdcall
+#define BLITZ3D(x) extern "C" __declspec(dllexport) x __stdcall
 #define BLITZ3D_RUNTIME_ERROR 0xE0000001
 #define BLITZ3D_RUNTIME_EXCEPTION 0xE0000002
 #define _NORETURN [[noreturn]]
 typedef const char* BBStr;
 
 namespace BlitzToolbox {
+    // Convert std::string to Blitz3D BBStr
     _NODISCARD inline BBStr blitz3d_string(const std::string& str) {
         static std::string buffer;
         buffer = str;
         return buffer.c_str();
     }
 
+    // Alias for legacy code
+    _NODISCARD inline BBStr getCharPtr(const std::string& str) {
+        return blitz3d_string(str);
+    }
+
     _NODISCARD _CONSTEXPR20 std::string replace_all(const std::string& string, const std::string& pattern, const std::string& newpat) {
         std::string str = string;
-        const unsigned nsize = newpat.size();
-        const unsigned psize = pattern.size();
+        const size_t nsize = newpat.size();
+        const size_t psize = pattern.size();
 
-        for (unsigned pos = str.find(pattern, 0); pos != std::string::npos; pos = str.find(pattern, pos + nsize))
-        {
+        for (size_t pos = str.find(pattern, 0); pos != std::string::npos; pos = str.find(pattern, pos + nsize)) {
             str.replace(pos, psize, newpat);
         }
         return str;
@@ -60,8 +66,8 @@ namespace BlitzToolbox {
     _NODISCARD _CONSTEXPR20 std::vector<std::string> split_string(const std::string& str, const std::string& split) {
         std::string string = str;
         std::vector<std::string> vector;
-        int pos = string.find(split);
-        while (pos != -1) {
+        size_t pos = string.find(split);
+        while (pos != std::string::npos) {
             vector.push_back(string.substr(0, pos));
             string = string.substr(pos + split.length());
             pos = string.find(split);
@@ -72,8 +78,8 @@ namespace BlitzToolbox {
 
     _NODISCARD _CONSTEXPR20 std::string to_lower_string(const std::string& str) {
         std::string result = str;
-        for (int i = 0; i < result.length(); i++) {
-            result[i] = tolower(result[i]);
+        for (size_t i = 0; i < result.length(); i++) {
+            result[i] = static_cast<char>(std::tolower(static_cast<unsigned char>(result[i])));
         }
         return result;
     }
